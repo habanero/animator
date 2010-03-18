@@ -4,7 +4,7 @@ include Java
   include_class 'javax.swing.' + name
 end
 
-%w( BorderLayout AlphaComposite).each do |name|
+%w( BorderLayout AlphaComposite Dimension Color).each do |name|
   include_class 'java.awt.' + name
 end
 
@@ -16,7 +16,7 @@ class FadeButton < JButton
   include java.awt.event.ActionListener
   attr_accessor :alpha
   def initialize()
-    super("fade")
+    super("click me")
     @alpha = 1.0
     setOpaque(false)
     addActionListener(self)
@@ -31,7 +31,7 @@ class FadeButton < JButton
   end
 
   def actionPerformed(e)
-    @animator.start
+    @animator.start unless @animator.running?
   end
 
   def paint(g)
@@ -51,11 +51,33 @@ class FadeButton < JButton
   end
 end
 
+class CheckBoard < JPanel
+  CHECK_SIZE = 50
+  def initialize
+    super()
+    @size = Dimension.new(200, 100)
+    setSize(@size)
+  end
 
-p = JPanel.new
-p.setLayout(BorderLayout.new)
-p.add(FadeButton.new, BorderLayout::CENTER)
-p.add(JLabel.new("  click!! =>  "), BorderLayout::WEST)
+  def getPreferredSize
+    @size
+  end
+
+  def paintComponent(g)
+    g.setColor(Color.white)
+    g.fillRect(0, 0, getWidth, getHeight)
+    g.setColor(Color.black)
+    (getWidth / CHECK_SIZE).times do |i|
+      (getHeight / CHECK_SIZE).times do |j|
+        g.fillRect(CHECK_SIZE*i, CHECK_SIZE*j, CHECK_SIZE/2, CHECK_SIZE/2)
+        g.fillRect(CHECK_SIZE*i + CHECK_SIZE/2, CHECK_SIZE*j + CHECK_SIZE/2, CHECK_SIZE/2, CHECK_SIZE/2)
+      end
+    end
+  end
+end
+
+p = CheckBoard.new
+p.add(FadeButton.new)
 
 f = JFrame.new
 f.add(p)
