@@ -32,7 +32,7 @@ class AnimatorTest < Test::Unit::TestCase
     a.resolution = 200
     assert_equal(200, a.resolution)
 
-    assert_raise(Animator::IllegalStateException ){ a.resolution = -20 }
+    assert_raise(ExceptionIfRunning::IllegalStateException ){ a.resolution = -20 }
 
     a.start
     assert_raise(Animator::IllegalStateException ){ a.resolution = 20 }

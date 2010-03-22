@@ -5,9 +5,11 @@ require 'thread'
 require 'swing_timing_source'
 require 'linear_interpolator'
 require 'timing_target_adapter'
+require 'exception_if_running'
 
 class Animator
-
+  include ExceptionIfRunning
+  
   def initialize(duration, target=nil)
     @duration = duration.to_f
     @resolution = 20
@@ -42,51 +44,39 @@ class Animator
     @running
   end
 
-  class IllegalStateException < StandardError; end
-  def exception_if_running
-    raise IllegalStateException if running?
-  end
-
   def interpolator=(i)
-    exception_if_running
     @interpolator = i
   end
-  attr_reader :interpolator
 
   def duration=(n)
-    exception_if_running
     @duration = n.to_f
   end
-  attr_reader :duration
 
   def repeat_count=(n)
-    exception_if_running
     @repeat_count = n.to_f
   end
-  attr_reader :repeat_count
 
   def resolution=(n)
     raise IllegalStateException if n < 0
-    exception_if_running
     @resolution = n
     @timer.resolution=(n)
   end
-  attr_reader :resolution
 
   def start_delay=(n)
     raise IllegalStateException if n < 0
-    exception_if_running
     @start_delay = n
     @timer.start_delay = n
   end
-  attr_reader :start_delay
 
   def start_fraction=(n)
     raise IllegalStateException if n < 0.0 || n > 1.0
-    exception_if_running
     @start_fraction = n
   end
-  attr_reader :start_fraction
+
+  attr_reader :interpolator, :duration, :repeat_count,
+                :resolution, :start_delay, :start_fraction
+  exception_if_running :interpolator=, :duration=, :repeat_count=,
+                          :resolution=, :start_delay=, :start_fraction=
 
   def add_target(target=nil, &block)
     target = ProcTargetAdapter.new(block) unless target
@@ -102,7 +92,6 @@ class Animator
   end
 
   def start
-    exception_if_running
     @begun = false
     @running = true
 
@@ -110,6 +99,7 @@ class Animator
     @current_start_time = @start_time
     @timer.start
   end
+  exception_if_running :start
 
   def stop
     @timer.stop
