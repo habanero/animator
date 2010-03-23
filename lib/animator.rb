@@ -40,10 +40,6 @@ class Animator
     @interpolator = LinearInterpolator
   end
 
-  def running?
-    @running
-  end
-
   def interpolator=(i)
     @interpolator = i
   end
