@@ -15,7 +15,7 @@ module ExceptionIfRunning
         alias_method alias_method_name, method_name
         module_eval <<-END
           def #{method_name}(*args, &block)
-            raise IllegalStateException if running?
+            raise IllegalStateException.new(self.to_s + "is running. but <" + (__method__.to_s) + "> was called") if running?
             #{alias_method_name}(*args, &block)
           end
         END
