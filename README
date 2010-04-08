@@ -3,21 +3,10 @@
 ========== ==========
 
 ◇ 概要 ◇
- Javaのアニメーション作成フレームワークtimingframeworkと同等のものをJRubyで書く
+ Javaのアニメーション作成フレームワークtimingframeworkのようなもの
 
 ◇ 動作条件 ◇
   JRuby 1.4.0
-
-◇ ファイル構成 ◇
- lib
-  |-animator.rb
-  |-discrete_interpolator.rb
-  |-linear_interpolator.rb
-  |-swing_timing_source.rb
-  |-timing_target_adapter.rb
-  |-demo
-      |-fade_button.rb
-
 
 ◇ 使い方 ◇
 demoフォルダ を参照
